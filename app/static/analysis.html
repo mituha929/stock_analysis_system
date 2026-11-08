@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>技術分析儀表板</title>
+  <link rel="stylesheet" href="/static/analysis.css?v=20260924-1">
+  <link rel="stylesheet" href="/static/notifications.css">
+  <script src="/static/notifications.js?v=20260915" defer></script>
+</head>
+<body>
+  <main>
+    <h1>技術分析儀表板</h1>
+    <a class="notification-link" href="/v3">V3 功能驗證台</a>
+    <a class="notification-link" href="/data-status">資料維護</a>
+    <a class="notification-link" href="/notifications">通知中心 <span class="notification-count" data-notification-count>—</span></a>
+    <p class="subtle">V2.4 — 以 API 回傳的 K 線、指標、訊號與背離進行可解釋呈現。</p>
+    <section class="panel controls">
+      <label>股票代號<input id="symbol" value="2330" maxlength="20" autocomplete="off"></label>
+      <label>MySQL 資料表<select id="table"><option value="candles">整張</option><option value="odd_lot_candle">零股</option></select></label>
+      <label id="interval-label">K 線週期<select id="interval"><option value="day">日 K</option><option value="week">週 K</option><option value="month">月 K</option></select></label>
+      <button id="analyze">執行分析</button><button id="health" class="secondary">檢查連線</button>
+    </section>
+    <p id="status">請先確認 MySQL 已儲存所選股票與週期的 K 線。</p>
+    <section id="result" class="hidden">
+      <div class="panel headline-grid">
+        <div class="stock-code"><span class="summary-label">股票代號</span><strong id="stock-symbol" class="summary-value">—</strong></div>
+        <div class="stock-name"><span class="summary-label">股票名稱</span><strong id="stock-name" class="summary-value">—</strong></div>
+        <div class="summary-item"><span class="summary-label">股票收盤價</span><strong id="price" class="summary-value">—</strong></div>
+        <div class="summary-item"><span class="summary-label">漲跌</span><strong id="price-change" class="summary-value neutral">—</strong></div>
+        <div class="summary-item"><span class="summary-label">漲跌幅</span><strong id="price-change-percent" class="summary-value neutral">—</strong></div>
+        <div class="summary-item"><span class="summary-label">方向</span><strong id="direction" class="summary-value">—</strong></div>
+        <div class="summary-item"><span class="summary-label">風險</span><strong id="risk" class="summary-value">—</strong></div>
+        <div class="summary-item"><span class="summary-label">訊號一致性</span><strong id="agreement" class="summary-value">—</strong></div>
+      </div>
+      <div class="scores" id="scores"></div>
+      <section id="action-evaluation" class="panel action-evaluation" aria-labelledby="action-evaluation-heading">
+        <div class="action-evaluation-header">
+          <div>
+            <span class="summary-label">評分型技術訊號</span>
+            <h2 id="action-evaluation-heading"><span id="action-score">—</span> 分</h2>
+          </div>
+          <strong id="action-label" class="action-label neutral">—</strong>
+        </div>
+        <p id="action-message" class="subtle">分數由程式規則計算，不由語言模型決定。</p>
+        <details id="action-details">
+          <summary>查看評分明細</summary>
+          <p id="direction-calculation" class="formula-line">—</p>
+          <p id="action-calculation" class="formula-line">—</p>
+          <div id="action-breakdown" class="action-breakdown"></div>
+          <h3 class="action-subheading">分數區間</h3>
+          <ul id="action-ranges" class="compact-list"></ul>
+          <h3 class="action-subheading">安全限制</h3>
+          <ul id="action-safety-rules" class="compact-list"></ul>
+          <p class="subtle">規則版本：<span id="scoring-version">—</span></p>
+          <p id="action-disclaimer" class="action-disclaimer"></p>
+        </details>
+      </section>
+      <section class="panel" aria-labelledby="chart-heading">
+        <h2 id="chart-heading">K 線與技術指標</h2>
+        <div class="chart-controls" aria-label="圖表設定">
+          <details class="indicator-menu"><summary>主圖技術指標</summary><div class="indicator-options">
+            <label><input id="overlay-ma5" type="checkbox">MA5</label>
+            <label><input id="overlay-ma20" type="checkbox" checked>MA20</label>
+            <label><input id="overlay-ma60" type="checkbox" checked>MA60</label>
+            <label><input id="overlay-ema12" type="checkbox">EMA12</label>
+            <label><input id="overlay-ema26" type="checkbox">EMA26</label>
+            <label><input id="overlay-bollinger" type="checkbox">布林通道</label>
+          </div></details>
+          <label>附圖一<select id="subchart-one"><option value="macd">MACD</option><option value="kd">KD</option><option value="rsi">RSI</option><option value="adx">DMI／ADX</option><option value="atr">ATR</option><option value="volume">成交量</option><option value="none">不顯示</option></select></label>
+          <label>附圖二<select id="subchart-two"><option value="kd">KD</option><option value="macd">MACD</option><option value="rsi">RSI</option><option value="adx">DMI／ADX</option><option value="atr">ATR</option><option value="volume">成交量</option><option value="none">不顯示</option></select></label>
+          <label>開始日期<input id="range-start" class="range-input" type="date"></label>
+          <label>結束日期<input id="range-end" class="range-input" type="date"></label>
+          <button id="apply-range" class="secondary" type="button">套用日期範圍</button>
+          <button id="reset-view" class="secondary" type="button">重設為最新 60 根</button>
+          <button id="show-all" class="secondary" type="button">顯示全部 K 線</button>
+          <span class="subtle" id="visible-range">—</span>
+          <div class="detail-inline" aria-label="滑鼠指向的 K 線詳細資料"><span id="candle-detail" class="inline-items">移動滑鼠到 K 線上可查看當日資料。</span></div>
+        </div>
+        <div id="price-legend" class="chart-legend" aria-label="主圖圖例"></div>
+        <div class="chart-wrap"><svg id="price-chart" class="chart" viewBox="0 0 980 410" role="img" aria-label="K 線與均線圖"></svg></div>
+        <div id="subcharts"></div>
+      </section>
+      <div class="two-columns"><section class="card"><h2>主要原因</h2><ul id="reasons"></ul></section><section class="card warning"><h2>風險提醒</h2><ul id="warnings"></ul></section></div>
+      <div class="two-columns" style="margin-top:14px"><section class="card"><h2>技術訊號</h2><ul id="signals"></ul></section><section class="card"><h2>背離（已確認波段轉折）</h2><p class="subtle">比較已確認的波段高低點；不是比較相鄰兩根 K 線。</p><ul id="divergences"></ul></section></div>
+    </section>
+  </main>
+  <script src="/static/analysis.js?v=20260924-1"></script>
+</body>
+</html>

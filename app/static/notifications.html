@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>通知中心 · 股票分析</title>
+  <link rel="stylesheet" href="/static/analysis.css">
+  <link rel="stylesheet" href="/static/notifications.css">
+  <script src="/static/notifications.js?v=20260915" defer></script>
+</head>
+<body><main class="notification-main">
+  <a href="/dashboard">← 返回技術分析</a>
+  <a href="/v3" style="margin-left:14px">V3 功能驗證台</a>
+  <a href="/data-status" style="margin-left:14px">資料維護</a>
+  <header class="notification-heading"><div><p class="subtle">股票分析 / 提醒紀錄</p><h1>通知中心 <span data-notification-count class="notification-count">—</span></h1></div>
+    <button id="notification-test" class="secondary">建立測試通知</button></header>
+  <section class="panel notification-settings">
+    <div><strong>系統通知</strong><p id="desktop-status" class="subtle">檢查瀏覽器支援狀態…</p></div>
+    <button id="desktop-enable">啟用系統通知</button><button id="desktop-disable" class="secondary">停止系統通知</button>
+    <p class="subtle notification-help">保持本頁或分析儀表板開啟，才能接收系統通知。關閉網頁後，提醒紀錄仍會由運行中的 API 保存。</p>
+  </section>
+  <section aria-label="通知清單">
+    <div class="notification-toolbar"><label><input type="checkbox" id="notification-unread"> 只看未讀</label><button id="notification-refresh" class="secondary">重新整理</button><button id="notification-read-all" class="secondary">全部標為已讀</button></div>
+    <p id="notification-status" role="status">讀取通知中…</p>
+    <div id="notification-list"></div>
+    <button id="notification-more" class="secondary" hidden>載入更早通知</button>
+  </section>
+</main></body></html>

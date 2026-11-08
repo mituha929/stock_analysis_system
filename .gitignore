@@ -1,0 +1,34 @@
+# Local settings and credentials
+.env*
+# Uncomment after replacing the local credentials in the example.
+#!/.env.example
+*.pfx
+*.p12
+*.pem
+*.key
+
+# Local Python environments and generated files
+.venv/
+.venv-*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.comtypes_gen/
+
+# Vendor components and installers
+*.dll
+*.exe
+
+# Runtime data. Keep the market calendar used by a fresh checkout.
+/data/*
+!/data/stock_market_holidays.json
+*.sqlite3*
+*.log
+
+# Reports, temporary files, and local exports
+/output/
+/tests/output/
+/tmp/
+/kline_2330_*.json
+/execute_code.txt
+/delete stock number.txt

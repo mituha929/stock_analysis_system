@@ -1,0 +1,16 @@
+[
+  {
+    "id": "TSLQ-week-20171204",
+    "symbol": "TSLQ",
+    "interval": "week",
+    "period_start": "2017-12-04",
+    "reason": "使用者指定排除；群益原生週 K 回傳負成交量 -2070765642（2026-10-20 實測）"
+  },
+  {
+    "id": "TSLQ-month-20180201",
+    "symbol": "TSLQ",
+    "interval": "month",
+    "period_start": "2018-02-01",
+    "reason": "使用者指定排除；群益原生月 K 回傳負成交量 -1273379155（2026-10-20 實測）"
+  }
+]

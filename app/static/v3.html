@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V3 功能驗證台 · 股票分析</title>
+  <link rel="stylesheet" href="/static/v3.css?v=20260915">
+  <link rel="stylesheet" href="/static/v3-components.css?v=20260915">
+  <script src="/static/v3.js?v=20261030-ai-preview1" defer></script>
+  <link rel="stylesheet" href="/static/v3-ai.css?v=20261030-stock-actions1">
+  <script src="/static/v3-ai.js?v=20261030-stock-actions1" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/v3"><span class="brand-mark">V3</span><span>股票策略工作台<small>規則、提醒與選股驗證</small></span></a>
+    <nav aria-label="V3 功能">
+      <button class="nav-item active" data-view="overview"><span>01</span>總覽</button>
+      <button class="nav-item" data-view="rules"><span>02</span>規則測試</button>
+      <button class="nav-item" data-view="alerts"><span>03</span>提醒監控</button>
+      <button class="nav-item" data-view="notifications"><span>04</span>通知紀錄</button>
+      <button class="nav-item" data-view="screener"><span>05</span>選股與排序</button>
+      <button class="nav-item" data-view="saved"><span>06</span>儲存策略</button>
+      <button class="nav-item" data-view="ai"><span>07</span>AI 選股</button>
+    </nav>
+    <div class="sidebar-links"><a href="/dashboard">技術分析</a><a href="/data-status">資料維護</a><a href="/notifications">通知中心</a><a href="/docs">API 文件</a></div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div><p class="eyebrow">CAPITAL STOCK ANALYSIS</p><h1 id="page-title">V3 功能總覽</h1></div>
+      <div class="health"><span id="api-dot" class="dot"></span><span id="api-status">正在檢查 API…</span><button id="refresh-all" class="icon-button" title="重新整理">↻</button></div>
+    </header>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <section class="view active" data-page="overview">
+      <div class="hero panel">
+        <div><span class="version-pill">V3.1 — V3.6</span><h2>從一條規則，驗證完整流程</h2><p>先測試單股條件，再建立提醒、掃描市場、排序結果，最後把設定保存成可重複執行的策略。</p></div>
+        <button id="start-validation" class="primary">開始驗證規則</button>
+      </div>
+      <div class="metric-grid">
+        <article class="metric"><span>規則欄位</span><strong id="metric-fields">—</strong><small>由 API 白名單提供</small></article>
+        <article class="metric"><span>啟用提醒</span><strong id="metric-alerts">—</strong><small>背景持續監控</small></article>
+        <article class="metric"><span>未讀通知</span><strong id="metric-notifications">—</strong><small>觸發與測試通知</small></article>
+        <article class="metric"><span>儲存策略</span><strong id="metric-saved">—</strong><small>可按 ID 重複執行</small></article>
+      </div>
+      <div class="panel section-panel">
+        <div class="section-heading"><div><p class="eyebrow">VERIFICATION MAP</p><h2>功能驗證路徑</h2></div><span class="subtle">每一站都會顯示 API 回傳與判斷摘要</span></div>
+        <div class="journey">
+          <button data-view="rules"><b>V3.1–3.2</b><span>規則與單股測試</span><small>確認欄位、運算子及結果</small></button>
+          <i>→</i><button data-view="alerts"><b>V3.3</b><span>提醒引擎</span><small>確認基準、觸發與冷卻</small></button>
+          <i>→</i><button data-view="notifications"><b>V3.4</b><span>通知系統</span><small>確認未讀與通知紀錄</small></button>
+          <i>→</i><button data-view="screener"><b>V3.5–3.6</b><span>選股與排序</span><small>確認預篩、規則與排名</small></button>
+        </div>
+      </div>
+      <div class="panel section-panel">
+        <div class="section-heading"><div><p class="eyebrow">RECENT ACTIVITY</p><h2>最近操作</h2></div><button id="clear-log" class="text-button">清除畫面紀錄</button></div>
+        <div id="activity-log" class="activity-list"><p class="empty">尚無操作紀錄。</p></div>
+      </div>
+    </section>
+
+    <section class="view" data-page="rules">
+      <div class="page-intro"><div><p class="eyebrow">V3.1 / V3.2</p><h2>規則引擎與單股測試</h2><p>使用 MySQL 最新兩根已儲存 K 線，測試欄位比較、交叉與巢狀 AND／OR。</p></div><span class="read-only">唯讀 MySQL</span></div>
+      <div class="two-column">
+        <form id="rule-form" class="panel form-panel">
+          <div class="section-heading"><h3>測試設定</h3><button type="button" id="load-rule-fields" class="text-button">查看欄位白名單</button></div>
+          <div class="form-grid three"><label>股票代號<input id="rule-symbol" value="2330" required></label><label>K 線週期<select id="rule-interval"><option value="day">日 K</option><option value="week">週 K</option><option value="month">月 K</option><option value="60m">60 分 K</option></select></label><label>資料表<select id="rule-table"><option value="candles">整張 candles</option><option value="odd_lot_candle">零股 odd_lot_candle</option></select></label></div>
+          <label>快速範例<select id="rule-preset"><option value="price_ma20">收盤價高於 MA20</option><option value="cross_ma20">收盤價向上穿越 MA20</option><option value="score">偏多且風險不高</option><option value="volume">量比放大且 RSI 不過熱</option></select></label>
+          <label>Rule JSON<textarea id="rule-json" class="code" rows="15" spellcheck="false"></textarea></label>
+          <div class="form-actions"><button type="button" id="format-rule" class="secondary">格式化 JSON</button><button type="submit" class="primary">執行單股測試</button></div>
+          <p class="hint">結果為「資料不足」時，不會誤判成符合或不符合。</p>
+        </form>
+        <div class="panel result-panel"><div class="section-heading"><h3>測試結果</h3><span id="rule-badge" class="status-badge idle">等待執行</span></div><div id="rule-summary" class="result-empty">設定條件後按「執行單股測試」。</div><details><summary>查看原始 API 回傳</summary><pre id="rule-raw">—</pre></details></div>
+      </div>
+      <dialog id="fields-dialog"><div class="dialog-heading"><h3>規則欄位白名單</h3><button data-close-dialog aria-label="關閉">×</button></div><div id="fields-list" class="field-list"></div></dialog>
+    </section>
+
+    <section class="view" data-page="alerts">
+      <div class="page-intro"><div><p class="eyebrow">V3.3</p><h2>提醒監控</h2><p>建立提醒後，第一次有效檢查只建立基準；之後 False → True 才產生事件。</p></div><button id="refresh-alerts" class="secondary">重新整理</button></div>
+      <div class="two-column narrow-right">
+        <form id="alert-form" class="panel form-panel">
+          <h3>建立提醒</h3>
+          <div class="form-grid two"><label>提醒名稱<input id="alert-name" value="台積電站上 MA20" required maxlength="100"></label><label>股票代號<input id="alert-symbol" value="2330" required></label></div>
+          <div class="form-grid three"><label>資料來源<select id="alert-source"><option value="mysql">MySQL K 線</option><option value="quote">即時報價快取</option></select></label><label>檢查間隔（秒）<input id="alert-interval" type="number" value="60" min="1"></label><label>冷卻（秒）<input id="alert-cooldown" type="number" value="300" min="0"></label></div>
+          <label>Rule JSON<textarea id="alert-rule-json" class="code" rows="10" spellcheck="false"></textarea></label>
+          <button class="primary" type="submit">建立提醒</button>
+          <p class="hint">MySQL 模式使用日 K／candles。即時模式只支援 price、volume、change_percent，需先登入群益並訂閱股票。</p>
+        </form>
+        <div class="panel guide-card"><p class="eyebrow">EXPECTED FLOW</p><ol><li><b>WAITING</b><span>等待基準或下一次觸發</span></li><li><b>TRIGGERED</b><span>False → True，建立事件</span></li><li><b>COOLDOWN</b><span>避免條件持續成立時洗通知</span></li><li><b>RESET</b><span>條件恢復 false 後重新等待</span></li></ol></div>
+      </div>
+      <div id="alerts-list" class="card-list"><p class="empty panel">目前沒有提醒。</p></div>
+      <details class="panel raw-block"><summary>最近一次提醒操作回傳</summary><pre id="alert-raw">—</pre></details>
+    </section>
+
+    <section class="view" data-page="notifications">
+      <div class="page-intro"><div><p class="eyebrow">V3.4</p><h2>通知紀錄</h2><p>檢查提醒觸發是否產生通知、未讀狀態是否正確保存。</p></div><div class="button-row"><button id="create-test-notification" class="secondary">建立測試通知</button><button id="mark-all-read" class="primary">全部標為已讀</button></div></div>
+      <div class="desktop-controls panel"><span id="desktop-status">尚未啟用系統通知</span><button id="desktop-enable" class="secondary">啟用系統通知</button><button id="desktop-disable" class="text-button">停用</button></div>
+      <div class="metric-grid compact"><article class="metric"><span>未讀通知</span><strong id="notification-unread">—</strong></article><article class="metric"><span>畫面筆數</span><strong id="notification-count">—</strong></article><article class="metric"><span>最近更新</span><strong id="notification-updated">—</strong></article></div>
+      <div class="filter-row"><label class="check"><input id="only-unread" type="checkbox">只看未讀</label><button id="refresh-notifications" class="secondary">重新整理</button><a href="/notifications">開啟完整通知中心 →</a></div>
+      <div id="v3-notification-list" class="notification-list"><p class="empty panel">讀取中…</p></div>
+    </section>
+
+    <section class="view" data-page="screener">
+      <div class="page-intro"><div><p class="eyebrow">V3.5 / V3.6</p><h2>選股與排序</h2><p>先以價格和成交量預篩，再套用 V2 技術分析與目前規則，完成後依分數排序。</p></div><span class="read-only">唯讀 MySQL</span></div>
+      <form id="screener-form" class="panel form-panel">
+        <div class="form-grid four"><label>股票範圍<select id="universe-kind"><option value="symbols">指定股票</option><option value="markets">市場</option><option value="watchlist">自選股</option></select></label><label>指定代號<input id="universe-symbols" value="2330,2454" placeholder="2330,2454"></label><fieldset><legend>市場</legend><label class="check"><input type="checkbox" name="market" value="0" checked>上市</label><label class="check"><input type="checkbox" name="market" value="1" checked>上櫃</label><label class="check"><input type="checkbox" name="market" value="4">興櫃</label></fieldset><label>分類代碼<input id="category-nos" placeholder="例如 24,124"></label></div>
+        <div class="form-grid four"><label>最低價格<input id="min-price" type="number" min="0" step="0.01" placeholder="不限"></label><label>最低成交量<input id="min-volume" type="number" min="0" placeholder="不限"></label><label>最多回傳<input id="screen-limit" type="number" value="20" min="1" max="1000"></label><label>時間預算（秒）<input id="screen-timeout" type="number" value="120" min="1" max="300"></label></div>
+        <label>Rule JSON<textarea id="screen-rule-json" class="code" rows="8" spellcheck="false"></textarea></label>
+        <div class="form-actions"><button type="button" id="copy-current-rule" class="secondary">套用規則測試內容</button><button type="submit" class="primary">執行選股</button></div>
+      </form>
+      <div id="screen-progress" class="progress-panel hidden"><span class="spinner"></span><div><b>正在掃描股票…</b><p>全市場通常需數十秒，完成前請勿重複送出。</p></div></div>
+      <div id="screen-results" class="panel result-panel"><div class="section-heading"><h3>選股結果</h3><span id="screen-badge" class="status-badge idle">等待執行</span></div><div id="screen-summary" class="result-empty">可先用 2330、2454 快速驗證，再切換為市場掃描。</div><div class="table-wrap"><table id="screen-table" class="data-table hidden"><thead><tr><th>排名</th><th>股票</th><th>價格</th><th>成交量</th><th>方向</th><th>風險</th><th>條件</th><th>資料日期</th></tr></thead><tbody></tbody></table></div><details><summary>查看完整 API 回傳</summary><pre id="screen-raw">—</pre></details></div>
+    </section>
+
+    <section class="view" data-page="ai">
+      <div class="page-intro"><div><p class="eyebrow">V3.10 / V3.11</p><h2>先看懂條件，再確認選股</h2><p>這是引導式操作，不是完整多輪聊天。請寫出完整技術條件；不保證獲利，不建立提醒、不儲存策略或下單。</p></div><span class="read-only">唯讀 MySQL · 本機 Ollama</span></div>
+      <form id="ai-form" class="panel form-panel">
+        <label>這次想找什麼股票？<textarea id="ai-text" rows="3" maxlength="2000" required placeholder="例如：2454 是否可以買進／賣出／加碼／減碼（每次選一種）。會先預覽對應的觀察策略，等你確認後才讀取資料與解讀；也可輸入完整技術選股條件。"></textarea></label>
+        <details><summary>不熟悉指標？先看三種研究方向</summary><p>近期偏強：觀察價格是否高於均線。回檔觀察：價格可能仍在長期均線上方，但低於短期均線；不表示一定會反彈。公司是否獲利：需要財報，目前不支援。</p><div class="button-row"><button type="button" class="secondary" data-ai-example="股價高於MA20，且RSI不超過70">試填均線觀察範例</button><button type="button" class="secondary" data-ai-example="股價高於MA60，且股價低於MA5">試填回檔觀察範例</button></div><p>範例是可修改的研究條件，不是買賣建議或獲利承諾。</p></details>
+        <div class="form-grid four">
+          <label>範圍<select id="ai-universe"><option value="markets">選定市場</option><option value="symbols">指定股票</option><option value="watchlist">目前自選股（確認時固定清單）</option></select></label>
+          <label>指定代號<input id="ai-symbols" placeholder="2330,2454" disabled></label>
+          <label>歷史資料表<select id="ai-source"><option value="candles">整張歷史 candles</option><option value="odd_lot_candle">零股商品範圍歷史 odd_lot_candle</option></select></label>
+          <label>分析週期<select id="ai-interval"><option value="day">日 K</option><option value="week">週 K</option><option value="month">月 K</option></select></label>
+        </div>
+        <fieldset id="ai-markets"><legend>市場（不由模型猜測）</legend><label class="check"><input type="checkbox" name="ai-market" value="0" checked>上市</label><label class="check"><input type="checkbox" name="ai-market" value="1" checked>上櫃</label><label class="check"><input type="checkbox" name="ai-market" value="4">興櫃</label><label class="check"><input type="checkbox" name="ai-market" value="5" disabled>上市零股</label><label class="check"><input type="checkbox" name="ai-market" value="6" disabled>上櫃零股</label></fieldset>
+        <p id="ai-source-note" class="hint">使用已儲存的完整期間，不會登入群益或啟動回補；分鐘 K 待後續驗證。</p>
+        <details><summary>分析與排序設定（修改後須重新確認）</summary><div class="form-grid four"><label>分析根數<input id="ai-bars" type="number" value="360" min="20" max="2000" required></label><label>最多顯示<input id="ai-limit" type="number" value="20" min="1" max="1000" required></label><label>掃描預算（秒）<input id="ai-timeout" type="number" value="120" min="1" max="300" required></label><label>排序<select id="ai-sort"><option value="default">條件數、方向分數、風險分數</option><option value="risk">風險分數由低到高</option><option value="symbol">股票代號</option></select></label></div><p>分析根數不是資料庫儲存上限。分數不是勝率，僅代表目前技術條件。</p></details>
+        <button type="submit" id="ai-parse" class="primary">解析條件並預覽</button>
+      </form>
+      <p id="ai-status" class="panel" role="status" aria-live="polite">尚未解析；不會自動選股。</p>
+      <details id="ai-history-panel" class="panel hidden"><summary>這一頁的文字修改紀錄（未送出執行）</summary><ul id="ai-history"></ul></details>
+      <section id="ai-preview" class="panel form-panel hidden" aria-label="AI 條件預覽">
+        <h3>請逐條確認需求與觀察條件</h3><p id="ai-original"></p><p id="ai-scope"></p><p id="ai-policy"></p>
+        <div id="ai-unresolved" role="alert"></div><div id="ai-explanation"></div>
+        <h4>採用的解讀與假設</h4><ul id="ai-assumptions"></ul><div id="ai-warnings"></div>
+        <div id="ai-editor"></div><button type="button" id="ai-revise" class="secondary hidden">套用修改，重新產生預覽</button>
+        <p id="ai-expiry" class="hint"></p>
+        <label class="check"><input type="checkbox" id="ai-confirm-scope">我已核對原文、範圍、週期、規則及排序設定</label>
+        <label class="check"><input type="checkbox" id="ai-confirm-assumptions">我已確認全部假設，並知道分數不是獲利機率</label>
+        <button type="button" id="ai-execute" class="primary" disabled>確認條件並開始選股</button>
+        <details><summary>進階：驗證後的 Rule JSON（唯讀）</summary><pre id="ai-rule-json"></pre></details>
+      </section>
+      <section id="ai-result" class="panel result-panel hidden" aria-label="AI 選股與單股分析結果"><h3 id="ai-result-title">選股結果</h3><div id="ai-result-summary"></div><div id="ai-result-items" class="table-wrap"></div><h4 id="ai-detail-heading">排除與資料狀態</h4><div id="ai-result-excluded"></div><details><summary>完整執行回應與本次確認版本</summary><pre id="ai-result-json"></pre></details></section>
+    </section>
+
+    <section class="view" data-page="saved">
+      <div class="page-intro"><div><p class="eyebrow">SAVED SCREENER</p><h2>儲存選股策略</h2><p>保存目前選股設定，之後以策略 ID 重新讀取當前 MySQL 資料並執行。</p></div><button id="refresh-saved" class="secondary">重新整理</button></div>
+      <form id="saved-form" class="panel form-panel inline-save"><input id="saved-id" type="hidden"><input id="saved-revision" type="hidden"><label>策略名稱<input id="saved-name" required maxlength="100" placeholder="例如：低風險偏多"></label><label>說明<input id="saved-description" maxlength="2000" placeholder="記錄這組條件的用途"></label><div class="form-actions"><button type="button" id="cancel-edit" class="secondary hidden">取消編輯</button><button type="submit" class="primary"><span id="save-button-label">儲存目前選股設定</span></button></div></form>
+      <div id="saved-list" class="card-list"><p class="empty panel">目前沒有儲存策略。</p></div>
+      <div id="saved-run-result" class="panel result-panel hidden"><div class="section-heading"><h3>策略執行結果</h3><span id="saved-run-badge" class="status-badge idle">—</span></div><div id="saved-run-summary"></div><div class="table-wrap"><table id="saved-table" class="data-table"><thead><tr><th>排名</th><th>股票</th><th>價格</th><th>方向</th><th>風險</th><th>符合原因</th></tr></thead><tbody></tbody></table></div></div>
+    </section>
+  </main>
+
+  <dialog id="confirm-dialog"><div class="dialog-heading"><h3>刪除策略</h3><button data-close-dialog aria-label="關閉">×</button></div><p>確定刪除「<strong id="delete-name"></strong>」？此操作不會刪除行情、提醒或通知。</p><div class="form-actions"><button data-close-dialog class="secondary">取消</button><button id="confirm-delete" class="danger">刪除策略</button></div></dialog>
+</body>
+</html>

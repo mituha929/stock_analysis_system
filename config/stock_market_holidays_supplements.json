@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "annual_archives": {
+    "2016": {
+      "source_url": "https://www.tpex.org.tw/storage/en-us/web/bulletin/trading_date/trading_date_105.htm",
+      "reviewed_on": "2026-10-24",
+      "reviewed_normalized_sha256": "e17ac9e610c5de690828148b11612772363f92b84d9f617ab4fedcd4f66131ae",
+      "covers_full_year": true,
+      "groups": [
+        {"dates": ["2016-01-01"], "name": "中華民國開國紀念日", "description": "Republic of China Memorial Day", "kind": "closed"},
+        {"dates": ["2016-02-04", "2016-02-05"], "name": "市場無交易，僅辦理結算交割", "description": "Last Clearing & Settlement Days before Lunar New Year Holiday", "kind": "closed"},
+        {"dates": ["2016-02-07"], "name": "農曆除夕", "description": "Lunar New Year's Eve", "kind": "closed"},
+        {"dates": ["2016-02-08", "2016-02-09", "2016-02-10", "2016-02-11", "2016-02-12"], "name": "農曆春節", "description": "Lunar New Year Holiday (Market reopens on February 15)", "kind": "closed"},
+        {"dates": ["2016-02-28", "2016-02-29"], "name": "和平紀念日／補假", "description": "Peace Memorial Day; Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2016-04-04", "2016-04-05"], "name": "兒童節、民族掃墓節／補假", "description": "Children's Day; Tomb-Sweeping Day; Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2016-05-01", "2016-05-02"], "name": "勞動節／補假", "description": "Labor Day; Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2016-06-09", "2016-06-10"], "name": "端午節／調整放假", "description": "Dragon Boat Festival; Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2016-09-15", "2016-09-16"], "name": "中秋節／調整放假", "description": "Moon Festival; Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2016-10-10"], "name": "國慶日", "description": "National Day", "kind": "closed"},
+        {"dates": ["2016-01-30", "2016-06-04", "2016-09-10"], "name": "週六補行交易", "description": "Additional Trading Days on Saturday", "kind": "special_open"}
+      ]
+    },
+    "2017": {
+      "source_url": "https://www.tpex.org.tw/storage/en-us/web/bulletin/trading_date/trading_date_106.htm",
+      "reviewed_on": "2026-10-24",
+      "reviewed_normalized_sha256": "5cead81de2715e636a6087a10779da50e662ce2cd174eb3297dd52598623ef7d",
+      "covers_full_year": true,
+      "groups": [
+        {"dates": ["2017-01-01", "2017-01-02"], "name": "中華民國開國紀念日／補假", "description": "Republic of China Memorial Day", "kind": "closed"},
+        {"dates": ["2017-01-25", "2017-01-26"], "name": "市場無交易，僅辦理結算交割", "description": "Last Clearing & Settlement Days before Lunar New Year Holiday", "kind": "closed"},
+        {"dates": ["2017-01-27"], "name": "農曆除夕", "description": "Lunar New Year's Eve", "kind": "closed"},
+        {"dates": ["2017-01-28", "2017-01-29", "2017-01-30", "2017-01-31", "2017-02-01"], "name": "農曆春節／補假", "description": "Lunar New Year Holiday (Market reopens on February 2)", "kind": "closed"},
+        {"dates": ["2017-02-27", "2017-02-28"], "name": "和平紀念日／調整放假", "description": "Adjusted Holiday; Peace Memorial Day", "kind": "closed"},
+        {"dates": ["2017-04-03", "2017-04-04"], "name": "兒童節、民族掃墓節／調整放假", "description": "Adjusted Holiday; Children's Day; Tomb-Sweeping Day", "kind": "closed"},
+        {"dates": ["2017-05-01"], "name": "勞動節", "description": "Labor Day", "kind": "closed"},
+        {"dates": ["2017-05-29", "2017-05-30"], "name": "端午節／調整放假", "description": "Adjusted Holiday; Dragon Boat Festival", "kind": "closed"},
+        {"dates": ["2017-10-04"], "name": "中秋節", "description": "Moon Festival", "kind": "closed"},
+        {"dates": ["2017-10-09", "2017-10-10"], "name": "國慶日／調整放假", "description": "Adjusted Holiday; National Day", "kind": "closed"},
+        {"dates": ["2017-02-18", "2017-06-03", "2017-09-30"], "name": "週六補行交易", "description": "Additional Trading Days on Saturday", "kind": "special_open"}
+      ]
+    },
+    "2018": {
+      "source_url": "https://www.tpex.org.tw/storage/en-us/web/bulletin/trading_date/trading_date_107.htm",
+      "reviewed_on": "2026-10-24",
+      "reviewed_normalized_sha256": "81d048bc488a87f5ef959c86fb23eaa9f3fb979675777885f49753735c0c164d",
+      "covers_full_year": true,
+      "groups": [
+        {"dates": ["2018-01-01"], "name": "中華民國開國紀念日", "description": "Republic of China Memorial Day", "kind": "closed"},
+        {"dates": ["2018-02-13", "2018-02-14"], "name": "市場無交易，僅辦理結算交割", "description": "Last Clearing & Settlement Days before Lunar New Year Holiday；原英文表 2/13 星期文字誤植，採日期並與 TWSE 官方 2018 年表交叉核對", "kind": "closed"},
+        {"dates": ["2018-02-15"], "name": "農曆除夕", "description": "Lunar New Year's Eve", "kind": "closed"},
+        {"dates": ["2018-02-16", "2018-02-17", "2018-02-18", "2018-02-19", "2018-02-20"], "name": "農曆春節／補假", "description": "Lunar New Year Holiday (Market reopens on February 21)", "kind": "closed"},
+        {"dates": ["2018-02-28"], "name": "和平紀念日", "description": "Peace Memorial Day", "kind": "closed"},
+        {"dates": ["2018-04-04"], "name": "兒童節", "description": "Children's Day", "kind": "closed"},
+        {"dates": ["2018-04-05", "2018-04-06"], "name": "民族掃墓節／調整放假", "description": "Tomb-Sweeping Day; Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2018-05-01"], "name": "勞動節", "description": "Labor Day", "kind": "closed"},
+        {"dates": ["2018-06-18"], "name": "端午節", "description": "Dragon Boat Festival", "kind": "closed"},
+        {"dates": ["2018-09-24"], "name": "中秋節", "description": "Moon Festival", "kind": "closed"},
+        {"dates": ["2018-10-10"], "name": "國慶日", "description": "National Day", "kind": "closed"},
+        {"dates": ["2018-12-31"], "name": "元旦前調整放假", "description": "Adjusted Holiday before Republic of China Memorial Day 2019", "kind": "closed"},
+        {"dates": ["2018-03-31", "2018-12-22"], "name": "週六補行交易", "description": "Additional Trading Days on Saturday", "kind": "special_open"}
+      ]
+    },
+    "2019": {
+      "source_url": "https://www.tpex.org.tw/storage/en-us/web/bulletin/trading_date/trading_date_108.htm",
+      "reviewed_on": "2026-10-24",
+      "reviewed_normalized_sha256": "6b338dd26cb962e57934be69c6037e4de1cb935bd5cc8f4d4d407cf431b66ed4",
+      "covers_full_year": true,
+      "groups": [
+        {"dates": ["2019-01-01"], "name": "中華民國開國紀念日", "description": "Republic of China Memorial Day", "kind": "closed"},
+        {"dates": ["2019-01-31", "2019-02-01"], "name": "市場無交易，僅辦理結算交割", "description": "Last Clearing & Settlement Days before Lunar New Year Holiday", "kind": "closed"},
+        {"dates": ["2019-02-04"], "name": "農曆除夕", "description": "Lunar New Year's Eve", "kind": "closed"},
+        {"dates": ["2019-02-05", "2019-02-06", "2019-02-07", "2019-02-08"], "name": "農曆春節／調整放假", "description": "Lunar New Year Holiday (Market reopens on February 11)", "kind": "closed"},
+        {"dates": ["2019-02-28", "2019-03-01"], "name": "和平紀念日／調整放假", "description": "Peace Memorial Day; Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2019-04-04"], "name": "兒童節", "description": "Children's Day", "kind": "closed"},
+        {"dates": ["2019-04-05"], "name": "民族掃墓節", "description": "Tomb-Sweeping Day", "kind": "closed"},
+        {"dates": ["2019-05-01"], "name": "勞動節", "description": "Labor Day", "kind": "closed"},
+        {"dates": ["2019-06-07"], "name": "端午節", "description": "Dragon Boat Festival", "kind": "closed"},
+        {"dates": ["2019-09-13"], "name": "中秋節", "description": "Moon Festival", "kind": "closed"},
+        {"dates": ["2019-10-10", "2019-10-11"], "name": "國慶日／調整放假", "description": "National Day; Adjusted Holiday", "kind": "closed"}
+      ]
+    },
+    "2020": {
+      "source_url": "https://www.tpex.org.tw/storage/en-us/web/bulletin/trading_date/trading_date_109.htm",
+      "reviewed_on": "2026-10-24",
+      "reviewed_normalized_sha256": "2d76860c098250c3fc6c160aa41f78b2fe56fc24ca4e2c9161d04124ffdbeb95",
+      "covers_full_year": true,
+      "groups": [
+        {"dates": ["2020-01-01"], "name": "中華民國開國紀念日", "description": "Republic of China Memorial Day", "kind": "closed"},
+        {"dates": ["2020-01-21", "2020-01-22"], "name": "市場無交易，僅辦理結算交割", "description": "Last Clearing & Settlement Days before Lunar New Year Holiday", "kind": "closed"},
+        {"dates": ["2020-01-23"], "name": "春節前調整放假", "description": "Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2020-01-24"], "name": "農曆除夕", "description": "Lunar New Year's Eve", "kind": "closed"},
+        {"dates": ["2020-01-25", "2020-01-26", "2020-01-27", "2020-01-28", "2020-01-29"], "name": "農曆春節／補假", "description": "Lunar New Year Holiday (Market reopens on January 30)", "kind": "closed"},
+        {"dates": ["2020-02-28"], "name": "和平紀念日", "description": "Peace Memorial Day", "kind": "closed"},
+        {"dates": ["2020-04-02", "2020-04-03", "2020-04-04"], "name": "兒童節、民族掃墓節／補假", "description": "Adjusted Holiday; Children's Day; Tomb-Sweeping Day", "kind": "closed"},
+        {"dates": ["2020-05-01"], "name": "勞動節", "description": "Labor Day", "kind": "closed"},
+        {"dates": ["2020-06-25", "2020-06-26"], "name": "端午節／調整放假", "description": "Dragon Boat Festival; Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2020-10-01", "2020-10-02"], "name": "中秋節／調整放假", "description": "Moon Festival; Adjusted Holiday", "kind": "closed"},
+        {"dates": ["2020-10-09", "2020-10-10"], "name": "國慶日／補假", "description": "Adjusted Holiday; National Day", "kind": "closed"}
+      ]
+    }
+  },
+  "closures": [
+    {
+      "date": "2019-08-09", "name": "利奇馬颱風臨時休市", "is_closed": true,
+      "reason": "中央社引述證交所、櫃買中心公告全日休市，並明列含興櫃股票；屬交易所公告的媒體轉述，非交易所原始頁，來源層級另標示。",
+      "source_url": "https://www.cna.com.tw/news/afe/201908080362.aspx", "enabled": true
+    },
+    {
+      "date": "2019-09-30", "name": "米塔颱風臨時休市", "is_closed": true,
+      "reason": "中央社引述證交所、櫃買中心公告全日休市，並明列含興櫃股票；屬交易所公告的媒體轉述，非交易所原始頁，來源層級另標示。",
+      "source_url": "https://www.cna.com.tw/news/afe/201909290209.aspx", "enabled": true
+    },
+    {
+      "date": "2023-08-03", "name": "卡努颱風臨時休市", "is_closed": true,
+      "reason": "證交所 112 年 8 月 2 日新聞稿明列次日集中市場全日休市。",
+      "source_url": "https://investoredu.twse.com.tw/Mobile_pages/..%2FFileSystem%2FFileUpload%2Fbe0109d1-76a0-4412-a00d-58a88c6e1714.pdf", "enabled": true
+    },
+    {
+      "date": "2024-07-24", "name": "凱米颱風臨時休市", "is_closed": true,
+      "reason": "證交所 113 年 7 月 23 日新聞稿明列次日集中市場全日休市。",
+      "source_url": "https://investoredu.twse.com.tw/Mobile_pages/..%2FFileSystem%2FFileUpload%2F13b8d442-db49-4ad8-98a5-f454a285335c.pdf", "enabled": true
+    },
+    {
+      "date": "2024-07-25", "name": "凱米颱風臨時休市", "is_closed": true,
+      "reason": "證交所 113 年 7 月 24 日新聞稿明列次日集中市場全日休市。",
+      "source_url": "https://www.twse.com.tw/staticFiles/news/news/tsecnews/8a8216d6906d4d340190e4a4ef640174.pdf", "enabled": true
+    },
+    {
+      "date": "2024-10-02", "name": "山陀兒颱風臨時休市", "is_closed": true,
+      "reason": "證交所 113 年 10 月 1 日新聞稿明列次日集中市場全日休市。",
+      "source_url": "https://www.twse.com.tw/staticFiles/news/news/tsecnews/8a8216d69236c2e301924806d5b4004e.pdf", "enabled": true
+    },
+    {
+      "date": "2024-10-03", "name": "山陀兒颱風臨時休市", "is_closed": true,
+      "reason": "證交所 113 年 10 月 2 日新聞稿明列次日集中市場全日休市。",
+      "source_url": "https://investoredu.twse.com.tw/Mobile_pages/..%2FFileSystem%2FFileUpload%2F2c6e50d4-a390-439c-a2c4-823937dee4b2.pdf", "enabled": true
+    },
+    {
+      "date": "2024-10-31", "name": "康芮颱風臨時休市", "is_closed": true,
+      "reason": "證交所 113 年 10 月 30 日新聞稿明列次日集中市場全日休市。",
+      "source_url": "https://www.twse.com.tw/staticFiles/news/news/tsecnews/8a8216d69236c2e30192dd5179bc0327.pdf", "enabled": true
+    },
+    {
+      "date": "2026-07-10", "name": "巴威颱風臨時休市", "is_closed": true,
+      "reason": "證券商公會承銷作業公告載明因集中市場休市而順延相關作業；來源是公會與承銷業者公告，非交易所原始休市公告，來源層級另標示。",
+      "source_url": "https://www.twsa.org.tw/F01/F011.html", "enabled": true
+    },
+    {
+      "date": "2026-10-23",
+      "name": "薔琵颱風臨時休市",
+      "is_closed": true,
+      "reason": "證交所官方資訊商店公告 115 年 10 月 23 日休市；本名單依使用者確認共同適用上市、上櫃、興櫃股票。非由臺北市停班停課直接推定。",
+      "source_url": "https://eshop.twse.com.tw/zh/home/index",
+      "enabled": true
+    }
+  ]
+}

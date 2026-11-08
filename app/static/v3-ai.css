@@ -1,0 +1,19 @@
+/* Guided AI page only; keep existing V3 manual forms unchanged. */
+#ai-preview .ai-rule-group {border-left:3px solid #467d87;margin:.8rem 0;padding:.6rem 1rem;background:#f4f8f8;}
+#ai-preview .ai-rule-leaf {margin:.65rem 0;line-height:1.7;overflow-wrap:anywhere;}
+#ai-preview pre,#ai-result pre {white-space:pre-wrap;overflow-wrap:anywhere;max-height:28rem;overflow:auto;}
+#ai-status {padding:1rem;white-space:pre-wrap;}
+#ai-status.error,#ai-unresolved {color:#9c3127;}
+#ai-form fieldset {display:flex;flex-wrap:wrap;gap:1rem;}
+#ai-preview .ai-thresholds {display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin:1rem 0;}
+#ai-preview .ai-thresholds label {padding:.65rem;background:#f4f7f8;border-radius:8px;}
+#ai-result-items {overflow-x:auto;}
+#ai-result table {width:100%;min-width:700px;border-collapse:collapse;}
+#ai-result th,#ai-result td {padding:.7rem;border-bottom:1px solid #dce4e6;text-align:left;vertical-align:top;}
+#ai-result th {white-space:nowrap;}
+#ai-result td:nth-child(2) {min-width:100px;}
+#ai-result td:nth-child(6) {min-width:165px;white-space:pre-line;}
+#ai-result .ai-result-detail td {white-space:normal;background:#f7faf9;}
+#ai-result-excluded {max-height:25rem;overflow:auto;}
+#ai-preview button {margin:.6rem 0;}
+#ai-preview .warning,#ai-result .warning {padding:.6rem;background:#fff5db;border-radius:6px;}

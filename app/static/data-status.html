@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>K 線資料維護</title>
+  <link rel="stylesheet" href="/static/data-status.css?v=20261103-summary-details">
+  <script src="/static/data-status.js?v=20261103-summary-details" defer></script>
+</head>
+<body>
+<main>
+  <header class="page-heading">
+    <div>
+      <p class="eyebrow">股票分析 / 資料管線</p>
+      <h1>K 線資料維護</h1>
+      <p class="subtle">查看各市場最新回補狀態、手動補到最近交易日，或只重試目前仍失敗的工作。每日排程會先同步整張與零股商品主檔，兩組成功後才更新 K 線。</p>
+    </div>
+    <nav><a href="/docs">API 文件</a><a href="/dashboard">技術分析</a><a href="/v3">策略功能</a></nav>
+  </header>
+
+  <section class="panel controls" aria-label="查詢與操作">
+    <label>市場
+      <select id="markets">
+        <option value="all">全部市場</option>
+        <option value="0,1,4">整張：上市／上櫃／興櫃</option>
+        <option value="5,6">零股：上市／上櫃</option>
+        <option value="0">上市</option><option value="1">上櫃</option><option value="4">興櫃</option>
+        <option value="5">上市零股</option><option value="6">上櫃零股</option>
+      </select>
+    </label>
+    <label>週期
+      <select id="intervals">
+        <option value="all">全部週期</option>
+        <option value="1m">1 分</option><option value="5m">5 分</option>
+        <option value="15m">15 分</option><option value="60m">60 分</option>
+        <option value="day">日線</option>
+        <option value="week">週線</option><option value="month">月線</option>
+      </select>
+    </label>
+    <label>自訂補齊目標（留空自動）
+      <input id="target-bars" type="number" min="1" max="10000" placeholder="一般1200／週560／月100">
+    </label>
+    <label>更新模式
+      <select id="resume"><option value="1">斷點續傳</option><option value="0">重新排入範圍</option></select>
+    </label>
+    <div class="actions">
+      <button id="reload" class="secondary">重新整理</button>
+      <button id="refresh">更新過期資料</button>
+      <button id="prepare-all" class="danger" title="獨占工作鎖；全部5市場、7週期準備成功後直接抓取，不清空資料">重抓全部資料</button>
+      <button id="retry" class="danger">重試失敗工作</button>
+      <button id="pause" class="secondary">安全暫停</button>
+      <button id="continue">繼續回補</button>
+    </div>
+    <p id="operation-status" class="status" role="status">尚未執行操作。</p>
+    <p id="query-status" class="subtle" role="status">尚未讀取資料庫狀態。</p>
+    <p id="control-status" class="subtle" role="status"></p>
+    <p class="status">「重抓全部資料」不受上方篩選影響；後端獨占共用工作鎖，準備全部市場／週期後直接抓取。其他回補執行中即拒絕啟動；使用目前商品主檔、不清空既有資料。手動回補休市日亦可，僅抓已完成期間；自動排程仍依交易日規則。</p>
+  </section>
+
+  <section class="summary-grid" aria-label="資料摘要">
+    <article class="metric"><span>有效商品</span><strong id="active-total">—</strong></article>
+    <article class="metric"><span>已追蹤工作</span><strong id="tracked-total">—</strong></article>
+    <article class="metric pending"><span>等待／執行</span><strong id="active-jobs">—</strong></article>
+    <article class="metric failed"><span>目前失敗</span><strong id="failed-total">—</strong></article>
+  </section>
+
+  <section class="panel schedule-panel">
+    <div class="worker-status"><h2>目前回補進度</h2><p id="worker-state">尚無執行紀錄</p><p id="worker-detail" class="subtle">—</p><p id="day-maintenance-detail" class="subtle">交易日照常更新；完整驗收安排於休市日。</p><p id="worker-memory" class="subtle">—</p></div>
+    <details><summary>最近記憶體階段紀錄（最多 32 筆）</summary><div class="table-wrap"><table><thead><tr><th>時間</th><th>階段</th><th>配置 MB</th><th>實體 MB</th><th>變化 MB</th><th>垃圾回收</th></tr></thead><tbody id="memory-rows"></tbody></table></div></details>
+    <div><h2>每日自動更新</h2><p id="schedule-detail" class="subtle">讀取排程設定中…</p></div>
+    <span id="schedule-state" class="badge">—</span>
+    <dl>
+      <div><dt>下次執行</dt><dd id="schedule-next">—</dd></div>
+      <div><dt>最近執行</dt><dd id="schedule-last">—</dd></div>
+      <div><dt>執行訊息</dt><dd id="schedule-message">—</dd></div>
+    </dl>
+    <div class="schedule-log">
+      <h3>最近自動更新 Log</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>開始時間</th><th>最近更新</th><th>狀態</th><th>階段</th><th>商品主檔</th><th>K 線工作</th><th>詳細資訊</th></tr></thead>
+          <tbody id="schedule-log-rows"><tr><td colspan="7">尚無自動更新紀錄</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel table-panel">
+    <div class="table-heading"><h2>市場與週期狀態</h2><span id="generated-at" class="subtle">—</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>市場</th><th>週期</th><th>已追蹤／商品</th><th>完成</th><th>最新等待</th><th>不足</th><th>執行</th><th>最後 K 標記日</th><th title="已檢查日期與最近狀態時間分開顯示；檢查不等於完整性通過">檢查與狀態更新</th><th>詳細資訊</th></tr></thead>
+        <tbody id="status-rows"><tr><td colspan="10">讀取中…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="subtle">「最後 K 標記日」不等於檢查進度或資料完整性通過；週／月標記為期間起始日。其餘工作狀態與抓取統計可點選「詳細資訊」查看。</p>
+  </section>
+
+  <section class="panel table-panel">
+    <h2>日 K 最近 1,200 根完整性驗收</h2>
+    <p class="subtle">交易日照常更新，不跑完整歷史驗收；週末／已確認休市日沿用每日排程時間檢查最近 1,200 根並補缺口。工作覆蓋率與每日回抓 10 根都不代表歷史完整。未知空日期保留待查證，不補造 K 線；此清單不自動輪詢。</p>
+    <div class="actions"><button id="day-gaps-load" class="secondary">查看／更新日 K 缺口</button><button id="day-gaps-prev" class="secondary">上一頁</button><button id="day-gaps-next" class="secondary">下一頁</button></div>
+    <p id="day-gaps-status" class="subtle">請按「查看／更新日 K 缺口」。首次休市日驗收時建立清單；平日未驗收不代表缺口已解決。</p>
+    <div class="table-wrap"><table><thead><tr><th>市場</th><th>商品</th><th>待核日期</th><th>狀態</th><th>原因／依據</th><th>已查次數</th><th>下次重試</th></tr></thead><tbody id="day-gap-rows"></tbody></table></div>
+  </section>
+
+  <section id="failure-panel" class="panel failure-panel" hidden>
+    <h2>目前失敗原因</h2>
+    <div id="failures"></div>
+  </section>
+</main>
+</body>
+</html>

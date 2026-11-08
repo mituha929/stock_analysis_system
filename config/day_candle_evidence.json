@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "market_no": 0,
+      "symbol": "0050",
+      "kind": "no_trade",
+      "start_date": "2025-06-11",
+      "end_date": "2025-06-17",
+      "source": "https://wwwc.twse.com.tw/staticFiles/news/news/tsecnews/8a8216d696b406fc0196ce27c2e90063.pdf",
+      "reason": "核對證交所114年5月14日正式新聞稿：0050因受益憑證分割，自6月11日至6月17日停止市場買賣，6月18日恢復。僅此商品此區間，不推定其他日期無成交。",
+      "reviewed": true,
+      "reviewed_on": "2026-10-26"
+    },
+    {
+      "market_no": 5,
+      "symbol": "0050",
+      "kind": "no_trade",
+      "start_date": "2025-06-11",
+      "end_date": "2025-06-17",
+      "source": "https://wwwc.twse.com.tw/staticFiles/news/news/tsecnews/8a8216d696b406fc0196ce27c2e90063.pdf",
+      "reason": "同份證交所正式分割公告停止該受益憑證在市場買賣，涵蓋0050零股；精確登錄市場5，不把所有整張無成交資料自動套用零股。",
+      "reviewed": true,
+      "reviewed_on": "2026-10-26"
+    }
+  ]
+}

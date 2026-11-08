@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "date": "2026-10-23",
+      "reason": "薔琵颱風",
+      "scope": "citywide",
+      "period": "full_day",
+      "work_suspended": true,
+      "classes_suspended": true,
+      "description": "市府於 2026-10-22 宣布翌日停止上班及上課；人工查證官方公告補登，尚未列入按年更新的歷史 CSV。",
+      "source_url": "https://www.gov.taipei/News_Content.aspx?n=F0DDAF49B89E9413&s=111366D9B3B4EC9D&sms=72544237BBE4C5F6",
+      "enabled": true
+    },
+    {
+      "date": "2026-10-24",
+      "reason": "薔琵颱風",
+      "scope": "citywide",
+      "period": "full_day",
+      "work_suspended": true,
+      "classes_suspended": true,
+      "description": "市府於 2026-10-23 宣布翌日已達停止上班及上課標準；人工查證官方公告補登，包含週末，不推定為股票交易日。",
+      "source_url": "https://www.gov.taipei/News_Content.aspx?n=F0DDAF49B89E9413&s=EFF89D0C58634D52&sms=72544237BBE4C5F6",
+      "enabled": true
+    }
+  ]
+}
