@@ -126,8 +126,15 @@ class MarketHistoryTests(unittest.TestCase):
                       'records':[{'institution_type':'test','values':{'buy_amount':'10','sell_amount':'4','net_amount':'7'}}]}
             save_json(folder/'normalized'/f'{key}.json',data)
             result=audit(folder)
+            self.assertTrue(result['complete'])
+            self.assertEqual(result['issues'],[])
+            self.assertEqual(result['accepted_exceptions'][0]['difference_twd'],'-1')
+            self.assertTrue(result['accepted_exceptions'][0]['net_difference_flag'])
+            data['records'][0]['values']['net_amount']='17'
+            save_json(folder/'normalized'/f'{key}.json',data)
+            result=audit(folder)
             self.assertFalse(result['complete'])
-            self.assertEqual(result['issues'][0]['reason'],'buy_minus_sell_not_net')
+            self.assertEqual(result['issues'][0]['difference_twd'],'-11')
             (folder/'raw'/'fixture.bin').write_bytes(b'changed')
             result=audit(folder)
             self.assertEqual(result['issues'][0]['reason'],'raw_integrity_mismatch')

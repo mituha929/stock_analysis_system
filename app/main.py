@@ -18,6 +18,8 @@ from app.api.saved_screeners import router as saved_screeners_router
 from app.api.ai_rules import router as ai_rules_router
 from app.api.stock_profiles import router as stock_profiles_router
 from app.api.external_market_quotes import router as external_market_quotes_router
+from app.api.market_data import enabled as market_data_enabled, router as market_data_router
+from app.api.dashboard_market_data import router as dashboard_market_data_router
 from app.services.external_market_quote_scheduler import ExternalMarketQuoteScheduler
 from app.services.us_stock_daily_scheduler import USStockDailyScheduler
 from app.services.stock_master_scheduler import WeeklyStockMasterScheduler
@@ -29,6 +31,7 @@ from app.services.quote_cache import QuoteCache
 from app.services.backfill_scheduler import DailyBackfillConfig, DailyBackfillScheduler
 from app.services.backfill_control import BackfillControl, BackfillRecovery
 from app.services.capital_history_service import configured_history_limits
+from app.services.taiwan_market_indices import IndexSnapshots
 from app.api.routes import _resume_saved_backfill
 
 load_dotenv()
@@ -38,6 +41,7 @@ load_dotenv()
 async def lifespan(app: FastAPI):
     configured_history_limits()
     app.state.capital_service = CapitalQuoteService(QuoteCache(), control=BackfillControl())
+    app.state.index_snapshots = IndexSnapshots(app.state.capital_service)
     # Route-level queue for all operations that can invoke the native DLL.
     # This intentionally belongs to the active event loop, not a module global.
     app.state.capital_dll_async_lock = asyncio.Lock()
@@ -105,6 +109,9 @@ app.include_router(screener_router)
 app.include_router(saved_screeners_router)
 app.include_router(ai_rules_router)
 app.include_router(external_market_quotes_router)
+if market_data_enabled():
+    app.include_router(market_data_router)
+app.include_router(dashboard_market_data_router)
 app.include_router(stock_profiles_router, prefix="/api")
 app.include_router(stock_profiles_router, prefix="/api/v1", include_in_schema=False)
 app.mount("/static", StaticFiles(directory=Path(__file__).resolve().parent / "static"), name="static")
@@ -112,7 +119,7 @@ app.mount("/static", StaticFiles(directory=Path(__file__).resolve().parent / "st
 
 @app.get("/dashboard", include_in_schema=False)
 def analysis_dashboard() -> FileResponse:
-    """Serve the V2.4 same-origin technical-analysis dashboard."""
+    """Serve the V2.5 same-origin technical-analysis dashboard."""
     return FileResponse(Path(__file__).resolve().parent / "static" / "analysis.html")
 
 
