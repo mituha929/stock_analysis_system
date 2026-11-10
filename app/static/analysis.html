@@ -6,15 +6,18 @@
   <title>技術分析儀表板</title>
   <link rel="stylesheet" href="/static/analysis.css?v=20260924-1">
   <link rel="stylesheet" href="/static/notifications.css">
+  <link rel="stylesheet" href="/static/dashboard-market-data.css?v=20261110-2">
   <script src="/static/notifications.js?v=20260915" defer></script>
+  <script src="/static/dashboard-market-data.js?v=20261111-1" defer></script>
 </head>
 <body>
   <main>
     <h1>技術分析儀表板</h1>
     <a class="notification-link" href="/v3">V3 功能驗證台</a>
     <a class="notification-link" href="/data-status">資料維護</a>
+    <a class="notification-link" href="#market-data">籌碼與基本面</a>
     <a class="notification-link" href="/notifications">通知中心 <span class="notification-count" data-notification-count>—</span></a>
-    <p class="subtle">V2.4 — 以 API 回傳的 K 線、指標、訊號與背離進行可解釋呈現。</p>
+    <p class="subtle">V2.5 — 以 API 回傳的 K 線、指標、訊號與背離進行可解釋呈現。</p>
     <section class="panel controls">
       <label>股票代號<input id="symbol" value="2330" maxlength="20" autocomplete="off"></label>
       <label>MySQL 資料表<select id="table"><option value="candles">整張</option><option value="odd_lot_candle">零股</option></select></label>
@@ -83,6 +86,45 @@
       </section>
       <div class="two-columns"><section class="card"><h2>主要原因</h2><ul id="reasons"></ul></section><section class="card warning"><h2>風險提醒</h2><ul id="warnings"></ul></section></div>
       <div class="two-columns" style="margin-top:14px"><section class="card"><h2>技術訊號</h2><ul id="signals"></ul></section><section class="card"><h2>背離（已確認波段轉折）</h2><p class="subtle">比較已確認的波段高低點；不是比較相鄰兩根 K 線。</p><ul id="divergences"></ul></section></div>
+    </section>
+    <section id="market-data" class="panel market-data" aria-labelledby="market-data-heading">
+      <header class="market-data-heading">
+        <h2 id="market-data-heading">籌碼與基本面</h2>
+      </header>
+      <div id="market-data-views" class="market-data-categories market-data-views" role="group" aria-label="查詢範圍">
+        <button type="button" data-view="stock" aria-pressed="true">個股資料</button>
+        <button type="button" data-view="market" aria-pressed="false">大盤／市場</button>
+      </div>
+      <div id="market-data-stock-controls">
+        <p class="subtle">輸入股票代號即可查詢。個股三大法人顯示該股票的買賣超股數。</p>
+        <form id="market-data-form" class="market-data-controls">
+          <label>股票代號<input id="market-data-code" value="2330" maxlength="6" pattern="[0-9]{4,6}|[0-9]{5}[A-Za-z]" required autocomplete="off"></label>
+          <button type="submit">查詢個股</button>
+        </form>
+        <div id="market-data-stock-categories" class="market-data-categories" role="group" aria-label="個股資料種類">
+          <button type="button" data-dataset="institutional_stock" aria-pressed="true">個股三大法人</button>
+          <button type="button" data-dataset="margin" aria-pressed="false">融資融券</button>
+          <button type="button" data-dataset="revenue" aria-pressed="false">月營收</button>
+          <button type="button" data-dataset="income" aria-pressed="false">損益表</button>
+          <button type="button" data-dataset="balance" aria-pressed="false">資產負債表</button>
+        </div>
+      </div>
+      <div id="market-data-market-controls" hidden>
+        <p class="subtle">可直接查看盤後指數。市場三大法人彙總整個市場的買賣金額。</p>
+        <div class="market-data-controls">
+          <label>市場<select id="market-data-market"><option value="TWSE">上市</option><option value="TPEx">上櫃</option></select></label>
+        </div>
+        <div id="market-data-market-categories" class="market-data-categories" role="group" aria-label="大盤資料種類">
+          <button type="button" data-dataset="index" aria-pressed="true">盤後指數</button>
+          <button type="button" data-dataset="institutional_market" aria-pressed="false">市場三大法人</button>
+        </div>
+      </div>
+      <div class="market-data-controls market-data-periods">
+        <label>日期／期別<select id="market-data-period" disabled><option value="">—</option></select></label>
+        <label id="market-data-scope-label" hidden>上櫃統計範圍<select id="market-data-scope"><option value="stocks">股票</option><option value="securities">有價證券</option></select></label>
+      </div>
+      <p id="market-data-status" class="subtle" role="status">載入資料…</p>
+      <div id="market-data-result" aria-busy="true"></div>
     </section>
   </main>
   <script src="/static/analysis.js?v=20260924-1"></script>

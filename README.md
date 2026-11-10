@@ -2,7 +2,7 @@
 
 以 Python 和 FastAPI 提供台股即時行情、歷史 K 線、技術分析、條件選股與提醒。群益行情由獨立背景程序接收，FastAPI 提供網頁和 API。歷史行情與商品基本資料存於 MySQL，提醒、已儲存策略和回補控制狀態使用本機 SQLite。
 
-進度更新至 **2026-11-08**。日期依專案文件中的實作與驗收紀錄整理。
+進度更新至 **2026-11-11**。
 
 ## 目前進度
 
@@ -15,7 +15,7 @@
 | V3 規則、選股與提醒 | 已實作規則測試、範圍預篩、選股排序、策略儲存與版本管理。提醒支援條件觸發、冷卻期與通知歷史。 | [規則](docs/V3_RULES.md)、[選股](docs/V3_SCREENER.md)、[策略](docs/V3_SAVED_SCREENERS.md)、[提醒](docs/V3_ALERTS.md)、[通知](docs/V3_NOTIFICATIONS.md) |
 | V3 AI 選股與單股觀察 | 已實作本機 Ollama 規則解析、白話預覽、門檻調整與確認後的唯讀執行。支援日／週／月 K，也可預覽單股買進、賣出、加碼或減碼的觀察條件。正式股票資料與實際模型的端到端驗收待完成。 | [AI 選股](docs/V3_AI_PREVIEW.md)、[單股觀察](docs/SINGLE_STOCK_ENTRY.md) |
 | 外部市場 | 已實作四個美股指數與台指期夜盤的半小時快照排程，以及 15 檔美股／ADR 的收盤後日 K 排程。每檔更新最近 250 根完整日 K。 | [指數與夜盤快照](docs/EXTERNAL_MARKET_QUOTES.md)、[美股日 K](docs/US_STOCK_DAILY.md) |
-| 籌碼與基本面 | 已驗證上市／上櫃三大法人、融資融券、月營收及一般業財報端點。歷史抓取與稽核可由獨立腳本執行，完整欄位口徑與數值驗收仍在進行。 | [端點驗證](docs/MARKET_DATA_ENDPOINT_SMOKE.md)、[歷史抓取](docs/MARKET_DATA_HISTORY.md)、[財務口徑查證](docs/MARKET_DATA_FINANCIAL_VERIFICATION_20261105.md) |
+| 籌碼與基本面 | 支援個股與市場三大法人、個股與市場融資融券、月營收及季報。日常抓取與歷史下載預設間隔 1 秒，正式排程及 MySQL 入庫需先完成來源、覆蓋清單與日曆設定。 | [歷史驗收](docs/MARKET_DATA_HISTORY.md)、[第二階段實作與操作](docs/implementation_plan.md) |
 
 ## 本機安裝與啟動
 
@@ -49,13 +49,27 @@ OLLAMA_ENABLED=false
 
 第一次使用 MySQL 功能時，在 Swagger UI 執行 `POST /api/v1/database/init` 建立或驗證專案資料庫與資料表。要驗證群益報價，可依序呼叫 `POST /api/v1/capital/connect` 登入、`POST /api/v1/watchlist` 新增自選商品，再用 `GET /api/v1/watchlist/quotes` 查看收到的行情。
 
+## 籌碼與基本面更新
+
+上市資料由臺灣證券交易所提供，上櫃資料由櫃買中心提供。籌碼資料包含個股與市場三大法人，以及個股與市場融資融券。日常抓取與歷史下載的預設及最低請求間隔均為 1 秒。
+
+| 資料 | 檢查時間（台灣時間） |
+| --- | --- |
+| 四類籌碼日報 | 交易日 18:00 首查，20:00、22:00 補查。22:00 回看前 5 個交易日的更正，次一交易日 09:00 補查前一交易日未完成的報表。 |
+| 月營收 | 每月 1～15 日 20:00 查上月。當月最後一個日曆日 20:00 回看最近兩個已結束月份。 |
+| 損益表、資產負債表 | 季末隔天起每日 21:00 檢查，申報截止日隔天再補查。現行財報處理範圍為一般業，公告未齊的資料標為部分覆蓋。 |
+
+正式抓取使用一個獨立的 Windows 排程工作，正式資料存入 MySQL。啟用前先套用 [資料表](sql/market_data_p2_mysql.sql) 和 [排程進度表](sql/market_data_p3_mysql.sql)，備妥涵蓋目標日期的交易日曆、來源核准清單及報表覆蓋清單，再依 [排程操作說明](docs/implementation_plan.md#p3-排程與手動補跑)預覽並註冊工作。
+
+儀表板的籌碼與基本面預覽目前讀取本機回填的 SQLite，正式 MySQL 報表可由[私有查詢 API](docs/implementation_plan.md#p5-私有唯讀查詢)讀取。新下載的專案需要先準備本機回填資料，才能使用歷史報表預覽。
+
 ## 網頁與 API 入口
 
 | 本機路徑 | 用途 |
 | --- | --- |
 | `/docs` | Swagger UI，可查看和測試 API |
 | `/api/v1/health` | 檢查 API、群益連線與商品狀態 |
-| `/dashboard` | 技術分析與圖表 |
+| `/dashboard` | 技術分析與圖表。本機可查詢已回填的籌碼與基本面歷史報表，以及從群益 API 取得的上市加權指數（TSEA）和櫃買指數（OTCA）盤後日 K。 |
 | `/data-status` | K 線回補、排程和缺口狀態 |
 | `/v3` | 規則測試、提醒、選股及策略管理 |
 | `/v3#ai` | AI 條件解析、預覽、確認與執行 |
@@ -69,6 +83,7 @@ OLLAMA_ENABLED=false
 | `config/` | 交易時段、休市補充資料、回補排除規則和日 K 查核設定 |
 | `data/` | 台股休市快照與本機執行資料。首次提交保留 `stock_market_holidays.json`。 |
 | `scripts/` | 商品同步、歷史抓取、回補、稽核及驗收工具 |
+| `sql/` | 籌碼與基本面資料表及排程進度表的 MySQL 建表腳本 |
 | `tests/` | 自動測試。抓取證據與測試產物預設留在本機。 |
 | `docs/` | 功能操作手冊及歷史驗收紀錄 |
 
@@ -76,12 +91,15 @@ OLLAMA_ENABLED=false
 
 ```powershell
 .\.venv\Scripts\python.exe -B -X utf8 .\scripts\run_worker_tests_offline.py
+.\.venv\Scripts\python.exe -B -X utf8 -m unittest discover -s tests -p "test_market*.py"
 ```
 
 ## 修改日誌
 
 | 日期 | 變更與驗證 |
 | --- | --- |
+| **2026-11-11** | 儀表板改由群益取得上市與上櫃指數日 K。新增市場融資融券後端、1 秒請求間隔及季報截止日補查。42 項市場資料測試通過，11/10 官方報表成功寫入隔離 SQLite，並從既有快取回放 76 組市場融資融券報表。 |
+| **2026-11-10** | 完成籌碼與基本面第一階段驗收、P1 暫存與 P2 版本匯入，並離線驗證 P3 排程、P4 回填和 P5 私有查詢。 [第二階段實作計畫](docs/implementation_plan.md) |
 | **2026-11-08** | 建立 GitHub 首頁 README，整理目前功能、安裝方式、驗證入口與修改日誌，並將專案命名為「韭歐虧」。 |
 | **2026-11-05** | 完成 12 個籌碼／基本面端點實測，另比對六個財務樣本的 44 個欄位。歷史工具下載 586／586 組報表，產出 356,638 筆正規化紀錄。整體數值驗收仍有三個差異待查，2026 Q3 財報的公司覆蓋仍未完整。 [端點驗證](docs/MARKET_DATA_ENDPOINT_SMOKE.md)、[財務口徑查證](docs/MARKET_DATA_FINANCIAL_VERIFICATION_20261105.md)、[歷史抓取](docs/MARKET_DATA_HISTORY.md) |
 | **2026-11-03** | 新增 15 檔美股／ADR 收盤後日 K 排程，逐檔驗證並在同一筆交易中寫入行情及完成紀錄。已有離線、隔離 MySQL 及來源抓取驗證紀錄。 [美股日 K](docs/US_STOCK_DAILY.md) |
